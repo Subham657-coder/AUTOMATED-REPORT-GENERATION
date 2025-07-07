@@ -1,44 +1,34 @@
-import pandas as pd
 from fpdf import FPDF
 
-# Read the CSV file
-data = pd.read_csv("data.csv")
+sales_data = {}
 
-# Analyze the data
-average_marks = data["Marks"].mean()
-max_marks = data["Marks"].max()
-min_marks = data["Marks"].min()
+with open("sales_data.txt", "r") as file:
+    for line in file:
+        product, value = line.strip().split(",")
+        sales_data[product] = int(value)
 
-# Create PDF report
+total_sales = sum(sales_data.values())
+average_sales = total_sales / len(sales_data)
+best_selling = max(sales_data, key=sales_data.get)
+
 pdf = FPDF()
 pdf.add_page()
-pdf.set_font("Arial", size=12)
+pdf.set_font("Arial", "B", 16)
+pdf.cell(0, 10, "Sales Report", ln=True, align='C')
 
-# Title
-pdf.set_font("Arial", 'B', 14)
-pdf.cell(200, 10, txt="Student Marks Report", ln=True, align='C')
-
-pdf.set_font("Arial", size=12)
+pdf.set_font("Arial", "", 12)
 pdf.ln(10)
+pdf.cell(0, 10, f"Total Sales: {total_sales}", ln=True)
+pdf.cell(0, 10, f"Average Sales per Product: {average_sales:.2f}", ln=True)
+pdf.cell(0, 10, f"Best Selling Product: {best_selling} ({sales_data[best_selling]} units)", ln=True)
 
-# Add table header
-pdf.cell(100, 10, txt="Name", border=1)
-pdf.cell(40, 10, txt="Marks", border=1)
-pdf.ln()
-
-# Add table rows
-for index, row in data.iterrows():
-    pdf.cell(100, 10, txt=row["Name"], border=1)
-    pdf.cell(40, 10, txt=str(row["Marks"]), border=1)
-    pdf.ln()
-
-# Summary
 pdf.ln(10)
-pdf.cell(200, 10, txt=f"Average Marks: {average_marks:.2f}", ln=True)
-pdf.cell(200, 10, txt=f"Highest Marks: {max_marks}", ln=True)
-pdf.cell(200, 10, txt=f"Lowest Marks: {min_marks}", ln=True)
+pdf.set_font("Arial", "B", 12)
+pdf.cell(0, 10, "Product-wise Sales Data:", ln=True)
 
-# Save PDF
-pdf.output("sample_report.pdf")
+pdf.set_font("Arial", "", 12)
+for product, sales in sales_data.items():
+    pdf.cell(0, 10, f"{product}: {sales} units", ln=True)
 
-print("✅ Report generated as sample_report.pdf")
+pdf.output("Task2_Sales_Report.pdf")
+print("PDF report generated successfully!")
