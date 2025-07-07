@@ -20,3 +20,6 @@ Through this project, I learned how to work with file input/output in Python, pe
 
 #OUTPUT
 [Task2_Sales_Report.pdf](https://github.com/user-attachments/files/21107788/Task2_Sales_Report.pdf)
+
+#TEST INPUT FILE
+[data.csv](https://github.com/user-attachments/files/21107839/data.csv)
